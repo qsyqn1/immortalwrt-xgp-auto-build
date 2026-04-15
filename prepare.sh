@@ -42,6 +42,26 @@ echo "update files"
 rm -rf files
 cp -r ../files .
 
+# --- 新增：QCN9274 固件自动化下载 ---
+echo "Downloading QCN9274 ath12k firmware..."
+FW_DIR="./files/lib/firmware/ath12k/QCN9274/hw2.0"
+mkdir -p "$FW_DIR"
+
+# 下载 1.6 版本的核心固件、board-2.bin 和 regdb.bin
+# 使用 -sL 参数让下载过程在日志中更简洁
+curl -sL "https://git.codelinaro.org/clo/ath-firmware/ath12k-firmware/-/raw/main/QCN9274/hw2.0/1.6/WLAN.WBE.1.6-01243-QCAHKSWPL_SILICONZ-1/firmware-2.bin" -o "$FW_DIR/firmware-2.bin"
+curl -sL "https://git.codelinaro.org/clo/ath-firmware/ath12k-firmware/-/raw/main/QCN9274/hw2.0/board-2.bin" -o "$FW_DIR/board-2.bin"
+curl -sL "https://git.codelinaro.org/clo/ath-firmware/ath12k-firmware/-/raw/main/QCN9274/hw2.0/regdb.bin" -o "$FW_DIR/regdb.bin"
+
+# 检查下载是否成功
+if [ -f "$FW_DIR/firmware-2.bin" ]; then
+    echo "QCN9274 firmware download successful."
+else
+    echo "Error: QCN9274 firmware download failed!"
+    # 如果固件是必须的，可以取消下面这一行的注释来停止编译
+    # exit 1 
+fi
+
 # WLAN Compatibility Fix
 mkdir -p ./files/lib/wifi/
 cp package/network/config/wifi-scripts/files/lib/wifi/mac80211.uc ./files/lib/wifi/mac80211.uc
