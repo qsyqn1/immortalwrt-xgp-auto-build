@@ -92,6 +92,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      workflows: write  # 必须显式加上这一行
     env:
       TZ: Asia/Shanghai
     steps:
