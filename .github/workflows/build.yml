@@ -1,5 +1,4 @@
-name: Build and Release
-
+name: 构建和发布
 on:
   schedule:
     - cron: '0 18 * * 4'
@@ -20,12 +19,12 @@ jobs:
     env:
       TZ: Asia/Shanghai
     steps:
-      - name: Check build space
+      - name: 检查构建空间
         run: |
           df -h
           lsblk
           free -h
-      - name: Check if /mnt is mounted
+      - name: 检查 /mnt 是否已挂载
         id: check-mnt
         run: |
           if mountpoint -q /mnt; then
@@ -35,30 +34,30 @@ jobs:
             echo "mnt_exists=false" >> $GITHUB_OUTPUT
             echo "/mnt is not mounted, skipping maximize-build-space"
           fi
-      - name: Maximize build space
+      - name: 最大化磁盘空间
         if: steps.check-mnt.outputs.mnt_exists == 'true'
         uses: easimon/maximize-build-space@master
         with:
           root-reserve-mb: 10240
           swap-size-mb: 1024
           remove-dotnet: 'false'
-      - name: Check build space after maximize-build-space
+      - name: 磁盘空间确认
         run: |
           df -h
           lsblk
           free -h
-      - name: Checkout code
+      - name: 结账代码
         uses: actions/checkout@v4
       - name: Setup environment
         run: |
           sudo ./install-env.sh
-      - name: Prepare
+      - name: 构建准备
         run: |
           ./prepare.sh
-      - name: Build
+      - name: 构建固件
         run: |
           ./build.sh
-      - name: Prepare release assets
+      - name: 准备发布固件
         run: |
           mkdir -p release_assets
           cp immortalwrt/bin/targets/rockchip/armv8/immortalwrt-rockchip-armv8-nlnet_xiguapi-v3-squashfs-sysupgrade.img.gz release_assets/ || true
@@ -69,20 +68,20 @@ jobs:
           cp immortalwrt/bin/targets/rockchip/armv8/version.buildinfo release_assets/ || true
           cp immortalwrt/bin/targets/rockchip/armv8/sha256sums release_assets/ || true
           bash -c "cd immortalwrt && git log -n 30" > release_assets/recent_git.log
-      - name: Build with istore
+      - name: 构建 istore 版本
         run: |
           ./build-istore.sh
-      - name: Prepare istore release assets
+      - name: 准备发布 istore 版本
         run: |
           mkdir -p release_assets
           cp immortalwrt/bin/targets/rockchip/armv8/immortalwrt-with-istore-rockchip-armv8-nlnet_xiguapi-v3-squashfs-sysupgrade.img.gz release_assets/ || true
           cp immortalwrt/bin/targets/rockchip/armv8/sha256sums release_assets/sha256sums-istore || true
-      - name: Upload artifacts
+      - name: 上传固件
         uses: actions/upload-artifact@v4
         with:
-          name: build-artifacts
+          name: 构建产物
           path: release_assets/
-      - name: Calculate disk usage
+      - name: 计算磁盘使用情况
         if: always()
         run: |
           df -h
@@ -96,20 +95,20 @@ jobs:
     env:
       TZ: Asia/Shanghai
     steps:
-      - name: Checkout code
+      - name: 结账代码
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Download artifacts
+      - name: 下载固件
         uses: actions/download-artifact@v4
         with:
-          name: build-artifacts
+          name: 构建产物
           path: release_assets/
-      - name: List files
+      - name: 列出文件
         run: |
           ls -lah
           ls -lah release_assets
-      - name: Prepare release info
+      - name: 准备发布信息
         id: release-prepare
         run: |
           current_date=$(date +'%y%m%d')
@@ -158,15 +157,15 @@ jobs:
           echo "\`\`\`" >> release_info.md
           echo "" >> release_info.md
           echo "</details>" >> release_info.md
-      - name: Create new tag
+      - name: 创建新标签
         run: |
           git tag ${{ steps.release-prepare.outputs.new_tag }}
           git push origin ${{ steps.release-prepare.outputs.new_tag }}
-      - name: Rename image
+      - name: 重命名固件
         run: |
           mv release_assets/immortalwrt-rockchip-armv8-nlnet_xiguapi-v3-squashfs-sysupgrade.img.gz release_assets/${{ steps.release-prepare.outputs.IMAGE_PREFIX }}squashfs-sysupgrade.img.gz
           mv release_assets/immortalwrt-with-istore-rockchip-armv8-nlnet_xiguapi-v3-squashfs-sysupgrade.img.gz release_assets/${{ steps.release-prepare.outputs.IMAGE_PREFIX }}istore-squashfs-sysupgrade.img.gz
-      - name: Create release
+      - name: 创建版本
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.release-prepare.outputs.new_tag }}
