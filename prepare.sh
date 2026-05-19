@@ -112,6 +112,8 @@ fi
 rm -rf feeds/luci/applications/luci-app-lucky
 rm -rf feeds/luci/applications/luci-app-easytier
 rm -rf feeds/luci/applications/luci-app-adguardhome
+rm -rf feeds/packages/lang/golang
+rm -rf feeds/packages/net/v2ray-geodata
 
 # 2. 克隆插件 (增加 --depth=1 加速编译)
 echo "Cloning custom packages..."
@@ -121,3 +123,6 @@ git clone --depth=1 https://github.com/rufengsuixing/luci-app-adguardhome.git pa
 git clone --depth=1 https://github.com/Tokisaki-Galaxy/luci-app-tailscale-community.git package/luci-app-tailscale-community
 # git clone -b dev https://github.com/Blueplanet20120/luci-app-romupdate.git
 git clone --depth=1 https://github.com/qsyqn1/luci-app-onlineupgrade.git package/luci-app-onlineupgrade
+git clone https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
+git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
+git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
