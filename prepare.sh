@@ -87,11 +87,6 @@ echo "install feeds"
 ./scripts/feeds install -a || { echo "install feeds failed"; exit 1; }
 ./scripts/feeds install -a -f -p qmodem || { echo "install qmodem feeds failed"; exit 1; }
 
-#替换为高版本 Golang 工具链 (Go 1.26)
-rm -rf feeds/packages/lang/golang      
-# 2. 克隆高版本 Golang 仓库到对应位置
-git clone https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
-
 if [ -L "package/zz-packages" ]; then
     echo "package/zz-packages is already a symlink"
 else
@@ -112,6 +107,11 @@ fi
 # if [ -f "feeds/packages/lang/rust/Makefile" ]; then
 #     sed -i 's/download-ci-llvm=true/download-ci-llvm=false/g' "feeds/packages/lang/rust/Makefile"
 # fi
+
+#替换为高版本 Golang 工具链 (Go 1.26)
+rm -rf feeds/packages/lang/golang      
+# 2. 克隆高版本 Golang 仓库到对应位置
+git clone https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
 
 # 1. 清理可能存在的重复包 (防止编译冲突)
 rm -rf feeds/luci/applications/luci-app-lucky
