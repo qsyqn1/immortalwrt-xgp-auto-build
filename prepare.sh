@@ -42,6 +42,11 @@ echo "update files"
 rm -rf files
 cp -r ../files .
 
+#替换为高版本 Golang 工具链 (Go 1.26)
+rm -rf feeds/packages/lang/golang      
+# 2. 克隆高版本 Golang 仓库到对应位置
+git clone https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
+
 # --- 新增：QCN9274 固件自动化下载 ---
 echo "Downloading QCN9274 ath12k firmware..."
 FW_DIR="./files/lib/firmware/ath12k/QCN9274/hw2.0"
@@ -112,7 +117,6 @@ fi
 rm -rf feeds/luci/applications/luci-app-lucky
 rm -rf feeds/luci/applications/luci-app-easytier
 rm -rf feeds/luci/applications/luci-app-adguardhome
-rm -rf feeds/packages/lang/golang
 rm -rf feeds/packages/net/v2ray-geodata
 
 # 2. 克隆插件 (增加 --depth=1 加速编译)
@@ -123,6 +127,5 @@ git clone --depth=1 https://github.com/rufengsuixing/luci-app-adguardhome.git pa
 git clone --depth=1 https://github.com/Tokisaki-Galaxy/luci-app-tailscale-community.git package/luci-app-tailscale-community
 # git clone -b dev https://github.com/Blueplanet20120/luci-app-romupdate.git
 git clone --depth=1 https://github.com/qsyqn1/luci-app-onlineupgrade.git package/luci-app-onlineupgrade
-git clone https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
 git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
 git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
