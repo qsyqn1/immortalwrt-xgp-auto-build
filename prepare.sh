@@ -83,15 +83,14 @@ fi
 
 echo "update feeds"
 ./scripts/feeds update -a || { echo "update feeds failed"; exit 1; }
+echo "install feeds"
+./scripts/feeds install -a || { echo "install feeds failed"; exit 1; }
+./scripts/feeds install -a -f -p qmodem || { echo "install qmodem feeds failed"; exit 1; }
 
 #替换为高版本 Golang 工具链 (Go 1.26)
 rm -rf feeds/packages/lang/golang      
 # 2. 克隆高版本 Golang 仓库到对应位置
 git clone https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
-
-echo "install feeds"
-./scripts/feeds install -a || { echo "install feeds failed"; exit 1; }
-./scripts/feeds install -a -f -p qmodem || { echo "install qmodem feeds failed"; exit 1; }
 
 if [ -L "package/zz-packages" ]; then
     echo "package/zz-packages is already a symlink"
