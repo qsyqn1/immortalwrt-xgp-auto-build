@@ -42,6 +42,27 @@ echo "update files"
 rm -rf files
 cp -r ../files .
 
+# --- 新增：QCN9274 固件自动化下载 ---
+echo "Downloading QCN9274 ath12k firmware..."
+FW_DIR="./files/lib/firmware/ath12k/QCN9274/hw2.0"
+mkdir -p "$FW_DIR"
+
+# 下载 1.6 版本的核心固件、board-2.bin 和 regdb.bin
+# 使用 -sL 参数让下载过程在日志中更简洁
+curl -sL "https://git.codelinaro.org/clo/ath-firmware/ath12k-firmware/-/raw/main/QCN9274/hw2.0/1.6/WLAN.WBE.1.6-01243-QCAHKSWPL_SILICONZ-1/firmware-2.bin" -o "$FW_DIR/firmware-2.bin"
+curl -sL "https://git.codelinaro.org/clo/ath-firmware/ath12k-firmware/-/raw/main/QCN9274/hw2.0/1.6/WLAN.WBE.1.6-01243-QCAHKSWPL_SILICONZ-1/Notice.txt" -o "$FW_DIR/Notice.txt"
+curl -sL "https://git.codelinaro.org/clo/ath-firmware/ath12k-firmware/-/raw/main/QCN9274/hw2.0/board-2.bin" -o "$FW_DIR/board-2.bin"
+curl -sL "https://git.codelinaro.org/clo/ath-firmware/ath12k-firmware/-/raw/main/QCN9274/hw2.0/regdb.bin" -o "$FW_DIR/regdb.bin"
+
+# 检查下载是否成功
+if [ -f "$FW_DIR/firmware-2.bin" ]; then
+    echo "QCN9274 firmware download successful."
+else
+    echo "Error: QCN9274 firmware download failed!"
+    # 如果固件是必须的，可以取消下面这一行的注释来停止编译
+    # exit 1 
+fi
+
 # WLAN Compatibility Fix
 mkdir -p ./files/lib/wifi/
 cp package/network/config/wifi-scripts/files/lib/wifi/mac80211.uc ./files/lib/wifi/mac80211.uc
@@ -81,3 +102,25 @@ fi
 # if [ -f "feeds/packages/lang/rust/Makefile" ]; then
 #     sed -i 's/download-ci-llvm=true/download-ci-llvm=false/g' "feeds/packages/lang/rust/Makefile"
 # fi
+
+#替换为高版本 Golang 工具链 (Go 1.26)
+rm -rf feeds/packages/lang/golang      
+# 2. 克隆高版本 Golang 仓库到对应位置
+git clone https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
+
+# 1. 清理可能存在的重复包 (防止编译冲突)
+rm -rf feeds/luci/applications/luci-app-lucky
+rm -rf feeds/luci/applications/luci-app-easytier
+rm -rf feeds/luci/applications/luci-app-adguardhome
+rm -rf feeds/packages/net/v2ray-geodata
+
+# 2. 克隆插件 (增加 --depth=1 加速编译)
+echo "Cloning custom packages..."
+git clone --depth=1 https://github.com/gdy666/luci-app-lucky.git package/lucky
+git clone --depth=1 https://github.com/EasyTier/luci-app-easytier.git package/luci-app-easytier
+git clone --depth=1 https://github.com/rufengsuixing/luci-app-adguardhome.git package/luci-app-adguardhome
+git clone --depth=1 https://github.com/Tokisaki-Galaxy/luci-app-tailscale-community.git package/luci-app-tailscale-community
+# git clone -b dev https://github.com/Blueplanet20120/luci-app-romupdate.git
+git clone --depth=1 https://github.com/qsyqn1/luci-app-onlineupgrade.git package/luci-app-onlineupgrade
+git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
+git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
