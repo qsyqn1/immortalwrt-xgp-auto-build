@@ -23,7 +23,7 @@ function index()
 end
 
 function action_zz_github()
-    luci.http.redirect("https://github.com/zzzz0317/immortalwrt-xgp-auto-build/")
+    luci.http.redirect("https://github.com/qsyjc/immortalwrt-xgp-auto-build/")
 end
 
 function action_zz_bilibili()
