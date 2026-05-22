@@ -1,5 +1,5 @@
 --[[
-LuCI about menu by zzzz0317 for XiGuaPi V3 <https://github.com/zzzz0317/immortalwrt-xgp-auto-build/>
+LuCI about menu by zzzz0317 for XiGuaPi V3 <https://github.com/qsyjc/immortalwrt-xgp-auto-build/>
 ]]--
 module("luci.controller.about", package.seeall)
 
