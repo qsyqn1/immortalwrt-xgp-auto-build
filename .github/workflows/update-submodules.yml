@@ -1,0 +1,28 @@
+name: Update Submodules
+
+on:
+  workflow_dispatch:
+
+permissions: # 添加这两行
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+          fetch-depth: 0
+          # 注意：如果是推送到当前仓库，默认不需要专门写 token，
+          # 但如果写了，它会遵循上面定义的 permissions
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update Submodules
+        run: |
+          git submodule update --remote --recursive
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "chore: update submodules to latest" || exit 0
+          git push
