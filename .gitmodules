@@ -17,7 +17,3 @@
 [submodule "zz-packages/others/mt5700webui-openwrt-server"]
 	path = zz-packages/others/mt5700webui-openwrt-server
 	url = https://github.com/vadimrew/mt5700webui-openwrt-server.git
-[submodule "zz-packages/luci-app-mosdns"]
-	path = zz-packages/luci-app-mosdns
-	url = https://github.com/sbwml/luci-app-mosdns.git
-    branch = v5
