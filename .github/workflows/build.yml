@@ -49,7 +49,7 @@ jobs:
           free -h
       - name: 结账代码
         uses: actions/checkout@v4
-      - name: Setup environment
+      - name: 设置环境
         run: |
           sudo ./install-env.sh
       - name: 构建准备
