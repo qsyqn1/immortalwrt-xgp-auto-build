@@ -134,4 +134,4 @@ git clone --depth=1 https://github.com/qsyqn1/luci-app-onlineupgrade.git package
 git clone --depth=1 https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
 git clone --depth=1 https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 # git clone --depth=1 https://github.com/sbwml/luci-app-quickfile package/quickfile
-git clone --depth=1 https://github.com/vernesong/OpenClash.git package/OpenClash.git
+git clone --depth=1 https://github.com/vernesong/OpenClash.git package/OpenClash
