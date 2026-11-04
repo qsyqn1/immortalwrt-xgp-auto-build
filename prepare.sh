@@ -103,13 +103,13 @@ fi
 #     sed -i 's/download-ci-llvm=true/download-ci-llvm=false/g' "feeds/packages/lang/rust/Makefile"
 # fi
 
-#替换为高版本 Golang 工具链 (Go 1.26)
-rm -rf feeds/packages/lang/golang      
-# 2. 克隆高版本 Golang 仓库到对应位置
-git clone https://github.com/sbwml/packages_lang_golang -b 26.x feeds/packages/lang/golang
+# 替换为满足 Tailscale 要求的 Go 工具链
+rm -rf feeds/packages/lang/golang
+# 克隆 Go 1.27.x 工具链仓库到对应位置
+git clone https://github.com/sbwml/packages_lang_golang -b 27.x feeds/packages/lang/golang
 # 2. 强力清除 ImmortalWrt 自带的旧版 v2ray-geodata 和 mosdns
 # 使用 feeds 命令卸载可以防止软链接残留
-./scripts/feeds uninstall v2ray-geodata mosdns luci-app-mosdns || true       
+./scripts/feeds uninstall v2ray-geodata mosdns luci-app-mosdns || true
 # 彻底物理删除 feeds 目录中可能残存的源码文件夹
 rm -rf feeds/packages/net/v2ray-geodata
 rm -rf feeds/packages/net/mosdns
